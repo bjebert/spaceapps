@@ -7,6 +7,8 @@ public class DataModel : MonoBehaviour
     public GameObject moon = null;
     public GameObject shuttle = null;
 
+    public List<csvReader.Trajectory> object_List = new List<csvReader.Trajectory>();
+
     // Use this for initialization
     void Start ()
     {

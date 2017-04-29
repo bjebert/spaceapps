@@ -14,6 +14,8 @@ public class MissionManager : MonoBehaviour
     void Start ()
     {
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
+        readData(myModel);
+
         myModel.shuttle = GameObject.Find("SpaceModelsCollection/shut");
         myModel.moon = GameObject.Find("SpaceModelsCollection/moon");
 
@@ -37,5 +39,11 @@ public class MissionManager : MonoBehaviour
             myModel.shuttle.transform.position = Vector3.MoveTowards(myModel.shuttle.transform.position, target, step);
             myModel.moon.transform.position = Vector3.MoveTowards(myModel.moon.transform.position, target2, step);
         }
+    }
+
+    private void readData(DataModel model)
+    {
+        // Read from file
+
     }
 }
