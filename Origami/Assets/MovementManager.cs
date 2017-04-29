@@ -40,7 +40,7 @@ public class MovementManager : MonoBehaviour
         setStateApp();
         GameObject codeMan = GameObject.Find("CodeManager");
         DataModel myModel = codeMan.GetComponent<DataModel>();
-        myModel.playbackSpeed += (10 * controllerInput.GetAxisRightThumbstickX());
+        myModel.playbackSpeed += (20 * controllerInput.GetAxisRightThumbstickX());
 
 
 

@@ -19,7 +19,18 @@ public class MissionManager : MonoBehaviour
         }
 
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
+        LineRenderer lineRendererShuttle = this.gameObject.AddComponent<LineRenderer>();
+        lineRendererShuttle.positionCount = 20;
+        lineRendererShuttle.widthMultiplier = 0.01f;
+        lineRendererShuttle.material = new Material(Shader.Find("Unlit/Texture"));
+        lineRendererShuttle.startColor = Color.white;
+        lineRendererShuttle.endColor = Color.white;
+
+        //LineRenderer lineRendererMoon = this.gameObject.AddComponent<LineRenderer>();
+        //lineRendererShuttle.positionCount = 20;
+
         readData(myModel);
+        plotMissionLines(myModel);
 
     }
 
@@ -108,6 +119,50 @@ public class MissionManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void plotMissionLines(DataModel model)
+    {
+        List<csvReader.Waypoint> moonTrajectories = new List<csvReader.Waypoint>();
+        List<csvReader.Waypoint> shuttleTrajectories = new List<csvReader.Waypoint>();
+
+        List<csvReader.Trajectory> trajectories = model.object_List;
+        foreach (csvReader.Trajectory trajectory in trajectories)
+        {
+            if (trajectory.modelId == "shuttle")
+            {
+                shuttleTrajectories = trajectory.waypoints;
+            } else if (trajectory.modelId == "moon")
+            {
+                moonTrajectories = trajectory.waypoints;
+            }
+        }
+
+        // Plot lines
+        int index = 0;
+        LineRenderer lineRendererShuttle = this.gameObject.GetComponent<LineRenderer>();
+        foreach (csvReader.Waypoint trajectory in shuttleTrajectories)
+        {
+            Vector3 coords = fromWayPoint(trajectory);
+            lineRendererShuttle.SetPosition(index, coords);
+
+            index += 1;
+            if (index == 19)
+            {
+                break;
+            }
+        }
+
+        index = 0;
+        /**LineRenderer lineRendererMoon = this.gameObject.GetComponent<LineRenderer>();
+        foreach (csvReader.Waypoint trajectory in moonTrajectories)
+        {
+            Vector3 coords = fromWayPoint(trajectory);
+            lineRendererMoon.SetPosition(index, coords);
+
+            index += 1;
+        }*/
+
     }
 
     private void readData(DataModel model)
