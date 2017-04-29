@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine.UI;
 // Needed //////////////////////////////////////////////////
 using HoloLensXboxController;
+using System;
 ///////////////////////////////////////////////////////////
 
 public class MovementManager : MonoBehaviour
@@ -27,14 +28,19 @@ public class MovementManager : MonoBehaviour
     void Update()
     {
         // Needed //////////////////////////////////////////////////
-        controllerInput.Update();
+        try
+        {
+            controllerInput.Update();
+        }
+        catch(Exception e)
+        {  }
         ///////////////////////////////////////////////////////////
 
 
         setStateApp();
         GameObject codeMan = GameObject.Find("CodeManager");
         DataModel myModel = codeMan.GetComponent<DataModel>();
-        myModel.playbackSpeed = 10 * controllerInput.GetAxisRightThumbstickX();
+        myModel.playbackSpeed += (10 * controllerInput.GetAxisRightThumbstickX());
 
 
 

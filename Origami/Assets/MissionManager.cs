@@ -8,6 +8,16 @@ public class MissionManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        GameObject sprites = GameObject.Find("SpaceModelsCollection");
+        if(sprites != null)
+        {
+            Renderer[] spriteRenders = sprites.GetComponentsInChildren<Renderer>();
+            foreach (Renderer spriteRender in spriteRenders)
+            {
+                spriteRender.enabled = false;
+            }
+        }
+
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
         readData(myModel);
 
@@ -44,11 +54,11 @@ public class MissionManager : MonoBehaviour
 
                     if (myModel.playbackTime <= tsS)
                     {
-                        target = fromWayPoint(body.waypoints[0], myModel.galacticScale);
+                        target = fromWayPoint(body.waypoints[0], myModel.galacticScale, body.size);
                     }
                     else if (myModel.playbackTime >= tsE)
                     {
-                        target = fromWayPoint(body.waypoints[c - 1], myModel.galacticScale);
+                        target = fromWayPoint(body.waypoints[c - 1], myModel.galacticScale, body.size);
                     }
                     else
                     {
@@ -60,7 +70,7 @@ public class MissionManager : MonoBehaviour
                         {
                             if (myModel.playbackTime == wp.zuluDate)
                             {
-                                target = fromWayPoint(wp, myModel.galacticScale);
+                                target = fromWayPoint(wp, myModel.galacticScale, body.size);
                                 skiped = true;
                             }
                             else
@@ -83,8 +93,8 @@ public class MissionManager : MonoBehaviour
                             {
                                 double mag = diffA.TotalMilliseconds / diffB.TotalMilliseconds;
 
-                                Vector3 p1 = fromWayPoint(wp1, myModel.galacticScale);
-                                Vector3 p2 = fromWayPoint(wp2, myModel.galacticScale);
+                                Vector3 p1 = fromWayPoint(wp1, myModel.galacticScale, body.size);
+                                Vector3 p2 = fromWayPoint(wp2, myModel.galacticScale, body.size);
 
                                 Vector3 v = p2 - p1;
                                 Vector3 s = v * (float)mag;
@@ -107,19 +117,31 @@ public class MissionManager : MonoBehaviour
         fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_probe.txt");
         fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_orbit.txt");
         fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_orbit.txt");
+        fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_probe.txt");
 
         foreach (String fileLocation in fileLocations)
         {
             csvReader.Trajectory body = csvReader.createTrajectory(fileLocation);
             model.object_List.Add(body);
-            GameObject sprite = GameObject.Find(body.modelId);
+            GameObject sprite = GameObject.Instantiate(GameObject.Find(body.modelId));
+            sprite.name = body.uid;
+            Renderer[] spriteRenders = sprite.GetComponentsInChildren<Renderer>();
+            foreach (Renderer spriteRender in spriteRenders)
+            {
+                spriteRender.enabled = true;
+            }
+
             model.trajectoryGameObjects.Add(body.uid, sprite);
         }
     }
 
-    private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale)
+    private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale, double size)
     {
-        return new Vector3((float)wp.X / galacticScale, (float)wp.Y / galacticScale, (float)wp.Z / galacticScale);
+        float x = ((float)wp.X + ((float)size / 2)) / galacticScale;
+        float y = ((float)wp.Y + ((float)size / 2)) / galacticScale;
+        float z = ((float)wp.Z + ((float)size / 2)) / galacticScale;
+
+        return new Vector3(x, y, z);
     }
 
     private static void updateGameObjectSize(GameObject sprite, float size, float galacticScale)
@@ -130,8 +152,9 @@ public class MissionManager : MonoBehaviour
             Vector3 initScale = sprite.transform.localScale;
             Vector3 spriteSize = spriteRender[0].bounds.size;
 
+            float sizeMag = size / galacticScale;
             float spriteMag = spriteSize.magnitude;
-            float scaleMag = (size / galacticScale) / spriteMag;
+            float scaleMag = sizeMag / spriteMag;
 
             sprite.transform.localScale = initScale * scaleMag;
         }

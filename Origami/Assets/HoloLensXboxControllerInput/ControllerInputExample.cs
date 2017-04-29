@@ -23,7 +23,7 @@ public class ControllerInputExample : MonoBehaviour {
 
     void Update () {
         // Needed //////////////////////////////////////////////////
-        controllerInput.Update();
+        // controllerInput.Update();
         ///////////////////////////////////////////////////////////
 
         
