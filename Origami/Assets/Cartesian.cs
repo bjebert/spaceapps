@@ -8,9 +8,11 @@ public class CartesianCoordinate
     readonly private double y;
     readonly private double z;
 
-    public CartesianCoordinate()
+    public CartesianCoordinate(double x, double y, double z)
     {
-
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
-
+    
 }
