@@ -5,36 +5,14 @@ using UnityEngine;
 
 public class MissionManager : MonoBehaviour
 {
-
-    public const float SPEED = 0.1f; // Speed weighting
-    public Vector3 target;
-    public Vector3 target2;
-
     // Use this for initialization
     void Start ()
     {
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
         readData(myModel);
 
-        myModel.trajectoryGameObjects.Add("shut", GameObject.Find("SpaceModelsCollection/shut"));
-//        myModel.trajectoryGameObjects.Add("moon", GameObject.Find("SpaceModelsCollection/moon"));
-
-        csvReader.Trajectory shut = new csvReader.Trajectory("shut", new List<csvReader.Waypoint>() );
-//        csvReader.Trajectory moon = new csvReader.Trajectory("moon", new List<csvReader.Waypoint>());
-
-        shut.waypoints.Add(new csvReader.Waypoint(myModel.playbackTime, 0, 137633909.2680, 349792303.3080, 124291199.2880 ));
-        shut.waypoints.Add(new csvReader.Waypoint(myModel.playbackTime.AddMinutes(1), 0, 356267828.1030, -60201234.2086, -8497196.120   ));
-
-        myModel.object_List.Add(shut);
-
-        if (myModel.shuttle != null)
-        {
-            target = myModel.shuttle.transform.position;
-            target += Vector3.up * 100000.0f;
-
-            target2 = myModel.moon.transform.position;
-            target2 += Vector3.left * 100000.0f;
-        }
+        myModel.trajectoryGameObjects.Add("shuttle", GameObject.Find("SpaceModelsCollection/shut"));
+        myModel.trajectoryGameObjects.Add("moon", GameObject.Find("SpaceModelsCollection/moon"));
     }
 
     // Update is called once per frame
@@ -42,8 +20,8 @@ public class MissionManager : MonoBehaviour
     {
         DataModel myModel = this.gameObject.GetComponent<DataModel>();
 
-        double seconds = myModel.playbackSpeed * Time.deltaTime;
-        myModel.playbackTime = myModel.playbackTime.AddSeconds(seconds);
+        double secs = myModel.playbackSpeed * Time.deltaTime * 1000;
+        myModel.playbackTime = myModel.playbackTime.AddSeconds(secs);
 
         foreach (csvReader.Trajectory body in myModel.object_List)
         {
@@ -114,15 +92,6 @@ public class MissionManager : MonoBehaviour
                 }
             }
         }
-
-        /*
-        if(myModel != null && myModel.shuttle != null)
-        {
-            float step = SPEED * Time.deltaTime;
-            myModel.shuttle.transform.position = Vector3.MoveTowards(myModel.shuttle.transform.position, target, step);
-            myModel.moon.transform.position = Vector3.MoveTowards(myModel.moon.transform.position, target2, step);
-        }
-        */
     }
 
     private void readData(DataModel model)
