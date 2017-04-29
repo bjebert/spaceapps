@@ -1,0 +1,2 @@
+﻿"earth", "SpaceModelsCollection/earth", 12756000
+"2014-07-22T11:00:00Z",0.0,0.0,0.0
