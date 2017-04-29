@@ -137,9 +137,9 @@ public class MissionManager : MonoBehaviour
 
     private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale, double size)
     {
-        float x = ((float)wp.X + ((float)size / 2)) / galacticScale;
-        float y = ((float)wp.Y + ((float)size / 2)) / galacticScale;
-        float z = ((float)wp.Z + ((float)size / 2)) / galacticScale;
+        float x = ((float)wp.X - ((float)size / 2)) / galacticScale;
+        float y = ((float)wp.Y - ((float)size / 2)) / galacticScale;
+        float z = ((float)wp.Z - ((float)size / 2)) / galacticScale;
 
         return new Vector3(x, y, z);
     }
@@ -150,7 +150,7 @@ public class MissionManager : MonoBehaviour
         if (spriteRender.Length > 0)
         {
             Vector3 initScale = sprite.transform.localScale;
-            Vector3 spriteSize = spriteRender[0].bounds.size;
+            Vector3 spriteSize = spriteRender[0].bounds.size * (float)0.5;
 
             float sizeMag = size / galacticScale;
             float spriteMag = spriteSize.magnitude;
