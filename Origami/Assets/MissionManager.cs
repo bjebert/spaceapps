@@ -11,25 +11,30 @@ public class MissionManager : MonoBehaviour
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
         readData(myModel);
 
-        myModel.trajectoryGameObjects.Add("shuttle", GameObject.Find("SpaceModelsCollection/shut"));
-        myModel.trajectoryGameObjects.Add("moon", GameObject.Find("SpaceModelsCollection/moon"));
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         DataModel myModel = this.gameObject.GetComponent<DataModel>();
 
         double secs = myModel.playbackSpeed * Time.deltaTime * 1000;
         myModel.playbackTime = myModel.playbackTime.AddSeconds(secs);
 
+        updateTrajectories(myModel);
+    }
+
+    void updateTrajectories(DataModel myModel)
+    { 
         foreach (csvReader.Trajectory body in myModel.object_List)
         {
             int c = body.waypoints.Count;
             if (c > 0)
             {
                 GameObject sprite = null;
-                if (myModel.trajectoryGameObjects.TryGetValue(body.modelId, out sprite))
+                myModel.trajectoryGameObjects.TryGetValue(body.uid, out sprite);
+
+                if(sprite != null)
                 {
                     DateTime tsS = body.waypoints[0].zuluDate;
                     DateTime tsE = body.waypoints[c -1].zuluDate;
@@ -39,11 +44,11 @@ public class MissionManager : MonoBehaviour
 
                     if (myModel.playbackTime <= tsS)
                     {
-                        target = fromWayPoint(body.waypoints[0]);
+                        target = fromWayPoint(body.waypoints[0], myModel.galacticScale);
                     }
                     else if (myModel.playbackTime >= tsE)
                     {
-                        target = fromWayPoint(body.waypoints[c - 1]);
+                        target = fromWayPoint(body.waypoints[c - 1], myModel.galacticScale);
                     }
                     else
                     {
@@ -55,7 +60,7 @@ public class MissionManager : MonoBehaviour
                         {
                             if (myModel.playbackTime == wp.zuluDate)
                             {
-                                target = fromWayPoint(wp);
+                                target = fromWayPoint(wp, myModel.galacticScale);
                                 skiped = true;
                             }
                             else
@@ -78,8 +83,8 @@ public class MissionManager : MonoBehaviour
                             {
                                 double mag = diffA.TotalMilliseconds / diffB.TotalMilliseconds;
 
-                                Vector3 p1 = fromWayPoint(wp1);
-                                Vector3 p2 = fromWayPoint(wp2);
+                                Vector3 p1 = fromWayPoint(wp1, myModel.galacticScale);
+                                Vector3 p2 = fromWayPoint(wp2, myModel.galacticScale);
 
                                 Vector3 v = p2 - p1;
                                 Vector3 s = v * (float)mag;
@@ -89,6 +94,7 @@ public class MissionManager : MonoBehaviour
                         }
                     }
                     sprite.transform.position = target;
+                    updateGameObjectSize(sprite, (float)body.size, myModel.galacticScale);
                 }
             }
         }
@@ -97,15 +103,37 @@ public class MissionManager : MonoBehaviour
     private void readData(DataModel model)
     {
         // Read from file
-        string fileLocation = Application.dataPath + "/StreamingAssets/lunar_probe.txt";
-        model.object_List.Add(csvReader.createTrajectory("shuttle", fileLocation));
+        List<String> fileLocations = new List<string>();
+        fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_probe.txt");
+        fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_orbit.txt");
+        fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_orbit.txt");
 
-        fileLocation = Application.dataPath + "/StreamingAssets/lunar_orbit.txt";
-        model.object_List.Add(csvReader.createTrajectory("moon", fileLocation));
+        foreach (String fileLocation in fileLocations)
+        {
+            csvReader.Trajectory body = csvReader.createTrajectory(fileLocation);
+            model.object_List.Add(body);
+            GameObject sprite = GameObject.Find(body.modelId);
+            model.trajectoryGameObjects.Add(body.uid, sprite);
+        }
     }
 
-    private static Vector3 fromWayPoint(csvReader.Waypoint wp)
+    private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale)
     {
-        return new Vector3((float)wp.X / (float)100000000.0, (float)wp.Y / (float)100000000.0, (float)wp.Z / (float)100000000.0);
+        return new Vector3((float)wp.X / galacticScale, (float)wp.Y / galacticScale, (float)wp.Z / galacticScale);
+    }
+
+    private static void updateGameObjectSize(GameObject sprite, float size, float galacticScale)
+    {
+        Renderer[] spriteRender = sprite.GetComponentsInChildren<Renderer>();
+        if (spriteRender.Length > 0)
+        {
+            Vector3 initScale = sprite.transform.localScale;
+            Vector3 spriteSize = spriteRender[0].bounds.size;
+
+            float spriteMag = spriteSize.magnitude;
+            float scaleMag = (size / galacticScale) / spriteMag;
+
+            sprite.transform.localScale = initScale * scaleMag;
+        }
     }
 }

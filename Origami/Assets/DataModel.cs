@@ -13,4 +13,6 @@ public class DataModel : MonoBehaviour
 
     public DateTime playbackTime = new DateTime(2014, 07, 22, 11, 00, 00);
     public double playbackSpeed = 10;
+
+    public float  galacticScale = (float)100000000.0;
 }
