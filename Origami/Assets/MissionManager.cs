@@ -128,7 +128,11 @@ public class MissionManager : MonoBehaviour
     private void readData(DataModel model)
     {
         // Read from file
+        string fileLocation = Application.dataPath + "/StreamingAssets/lunar_probe.txt";
+        model.object_List.Add(csvReader.createTrajectory("shuttle", fileLocation));
 
+        fileLocation = Application.dataPath + "/StreamingAssets/lunar_orbit.txt";
+        model.object_List.Add(csvReader.createTrajectory("moon", fileLocation));
     }
 
     private static Vector3 fromWayPoint(csvReader.Waypoint wp)

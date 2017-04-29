@@ -46,7 +46,7 @@ public class csvReader : MonoBehaviour {
 		
 	}
 
-    static Trajectory createTrajectory(String modelId, String fileLocation)
+    public static Trajectory createTrajectory(String modelId, String fileLocation)
     {
         List<Waypoint> waypoints = new List<Waypoint>();
 
