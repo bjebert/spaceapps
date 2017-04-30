@@ -6,7 +6,8 @@ using UnityEngine;
 public class DataModel : MonoBehaviour
 { 
     public List<csvReader.Trajectory> object_List = new List<csvReader.Trajectory>();
-    public Dictionary<string, GameObject> trajectoryGameObjects = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject>   trajectoryGameObjects = new Dictionary<string, GameObject>();
+    public Dictionary<string, LineRenderer> trajectoryLineRenders = new Dictionary<string, LineRenderer>();
 
     public DateTime playbackTime = new DateTime(2014, 07, 22, 11, 00, 00);
     public double playbackSpeed = 10;

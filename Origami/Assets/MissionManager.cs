@@ -19,15 +19,6 @@ public class MissionManager : MonoBehaviour
         }
 
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
-        LineRenderer lineRendererShuttle = this.gameObject.AddComponent<LineRenderer>();
-        lineRendererShuttle.positionCount = 20;
-        lineRendererShuttle.widthMultiplier = 0.01f;
-//        lineRendererShuttle.material = new Material(Shader.Find("Default"));
-        lineRendererShuttle.startColor = Color.white;
-        lineRendererShuttle.endColor = Color.white;
-
-        //LineRenderer lineRendererMoon = this.gameObject.AddComponent<LineRenderer>();
-        //lineRendererShuttle.positionCount = 20;
 
         readData(myModel);
         plotMissionLines(myModel);
@@ -123,46 +114,22 @@ public class MissionManager : MonoBehaviour
 
     private void plotMissionLines(DataModel model)
     {
-        List<csvReader.Waypoint> moonTrajectories = new List<csvReader.Waypoint>();
-        List<csvReader.Waypoint> shuttleTrajectories = new List<csvReader.Waypoint>();
-
-        List<csvReader.Trajectory> trajectories = model.object_List;
-        foreach (csvReader.Trajectory trajectory in trajectories)
+        foreach (csvReader.Trajectory trajectory in model.object_List)
         {
-            if (trajectory.modelId == "craft")
+            LineRenderer lineRenderer = null;
+            model.trajectoryLineRenders.TryGetValue(trajectory.uid, out lineRenderer);
+            if(lineRenderer != null)
             {
-                shuttleTrajectories = trajectory.waypoints;
-            } else if (trajectory.modelId == "moon")
-            {
-                moonTrajectories = trajectory.waypoints;
+                // Plot lines
+                int index = 0;
+                foreach (csvReader.Waypoint wp in trajectory.waypoints)
+                {
+                    Vector3 coords = fromWayPoint(wp, model.galacticScale, 0);
+                    lineRenderer.SetPosition(index, coords);
+                    index += 1;
+                }
             }
         }
-
-        // Plot lines
-        int index = 0;
-        LineRenderer lineRendererShuttle = this.gameObject.GetComponent<LineRenderer>();
-        foreach (csvReader.Waypoint trajectory in shuttleTrajectories)
-        {
-            Vector3 coords = fromWayPoint(trajectory, model.galacticScale, 0);
-            lineRendererShuttle.SetPosition(index, coords);
-
-            index += 1;
-            if (index == 19)
-            {
-                break;
-            }
-        }
-
-        index = 0;
-        /**LineRenderer lineRendererMoon = this.gameObject.GetComponent<LineRenderer>();
-        foreach (csvReader.Waypoint trajectory in moonTrajectories)
-        {
-            Vector3 coords = fromWayPoint(trajectory);
-            lineRendererMoon.SetPosition(index, coords);
-
-            index += 1;
-        }*/
-
     }
 
     private void readData(DataModel model)
@@ -186,15 +153,23 @@ public class MissionManager : MonoBehaviour
                 spriteRender.enabled = true;
             }
 
+            LineRenderer lineRenderer = sprite.AddComponent<LineRenderer>();
+            lineRenderer.positionCount = body.waypoints.Count;
+            lineRenderer.widthMultiplier = 0.01f;
+            //        lineRenderer.material = new Material(Shader.Find("Default"));
+            lineRenderer.startColor = Color.white;
+            lineRenderer.endColor = Color.white;
+
             model.trajectoryGameObjects.Add(body.uid, sprite);
+            model.trajectoryLineRenders.Add(body.uid, lineRenderer);
         }
     }
 
     private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale, double size)
     {
-        float x = ((float)wp.X - ((float)size / 2)) / galacticScale;
-        float y = ((float)wp.Y - ((float)size / 2)) / galacticScale;
-        float z = ((float)wp.Z - ((float)size / 2)) / galacticScale;
+        float x = (float)wp.X / galacticScale;
+        float y = (float)wp.Y / galacticScale;
+        float z = (float)wp.Z / galacticScale;
 
         return new Vector3(x, y, z);
     }
