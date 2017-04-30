@@ -21,8 +21,6 @@ public class MissionManager : MonoBehaviour
         DataModel myModel = this.gameObject.AddComponent<DataModel>();
 
         readData(myModel);
-        plotMissionLines(myModel);
-
     }
 
     // Update is called once per frame
@@ -34,6 +32,7 @@ public class MissionManager : MonoBehaviour
         myModel.playbackTime = myModel.playbackTime.AddSeconds(secs);
 
         updateTrajectories(myModel);
+        plotMissionLines(myModel);
     }
 
     void updateTrajectories(DataModel myModel)
@@ -56,11 +55,11 @@ public class MissionManager : MonoBehaviour
 
                     if (myModel.playbackTime <= tsS)
                     {
-                        target = fromWayPoint(body.waypoints[0], myModel.galacticScale, body.size);
+                        target = fromWayPoint(body.waypoints[0], myModel.galacticScale, myModel.cameraOffset);
                     }
                     else if (myModel.playbackTime >= tsE)
                     {
-                        target = fromWayPoint(body.waypoints[c - 1], myModel.galacticScale, body.size);
+                        target = fromWayPoint(body.waypoints[c - 1], myModel.galacticScale, myModel.cameraOffset);
                     }
                     else
                     {
@@ -72,7 +71,7 @@ public class MissionManager : MonoBehaviour
                         {
                             if (myModel.playbackTime == wp.zuluDate)
                             {
-                                target = fromWayPoint(wp, myModel.galacticScale, body.size);
+                                target = fromWayPoint(wp, myModel.galacticScale, myModel.cameraOffset);
                                 skiped = true;
                             }
                             else
@@ -95,8 +94,8 @@ public class MissionManager : MonoBehaviour
                             {
                                 double mag = diffA.TotalMilliseconds / diffB.TotalMilliseconds;
 
-                                Vector3 p1 = fromWayPoint(wp1, myModel.galacticScale, body.size);
-                                Vector3 p2 = fromWayPoint(wp2, myModel.galacticScale, body.size);
+                                Vector3 p1 = fromWayPoint(wp1, myModel.galacticScale, myModel.cameraOffset);
+                                Vector3 p2 = fromWayPoint(wp2, myModel.galacticScale, myModel.cameraOffset);
 
                                 Vector3 v = p2 - p1;
                                 Vector3 s = v * (float)mag;
@@ -124,7 +123,7 @@ public class MissionManager : MonoBehaviour
                 int index = 0;
                 foreach (csvReader.Waypoint wp in trajectory.waypoints)
                 {
-                    Vector3 coords = fromWayPoint(wp, model.galacticScale, 0);
+                    Vector3 coords = fromWayPoint(wp, model.galacticScale, model.cameraOffset);
                     lineRenderer.SetPosition(index, coords);
                     index += 1;
                 }
@@ -169,11 +168,11 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale, double size)
+    private static Vector3 fromWayPoint(csvReader.Waypoint wp, float galacticScale, Vector3 cameraOffset)
     {
-        float x = (float)wp.X / galacticScale;
-        float y = (float)wp.Y / galacticScale;
-        float z = (float)wp.Z / galacticScale;
+        float x = ((float)wp.X / galacticScale) + cameraOffset.x;
+        float y = ((float)wp.Y / galacticScale) + cameraOffset.y;
+        float z = ((float)wp.Z / galacticScale) + cameraOffset.z;
 
         return new Vector3(x, y, z);
     }

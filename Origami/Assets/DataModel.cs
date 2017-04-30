@@ -15,4 +15,7 @@ public class DataModel : MonoBehaviour
     public float  galacticScale = (float)100000000.0;
 
     public float planetScale = 1;
+
+    public Vector3 cameraOffset = new Vector3(0, 0, 0);
+    public Boolean lockCamera = false;
 }
