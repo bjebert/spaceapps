@@ -22,7 +22,7 @@ public class MissionManager : MonoBehaviour
         LineRenderer lineRendererShuttle = this.gameObject.AddComponent<LineRenderer>();
         lineRendererShuttle.positionCount = 20;
         lineRendererShuttle.widthMultiplier = 0.01f;
-        lineRendererShuttle.material = new Material(Shader.Find("Unlit/Texture"));
+//        lineRendererShuttle.material = new Material(Shader.Find("Default"));
         lineRendererShuttle.startColor = Color.white;
         lineRendererShuttle.endColor = Color.white;
 
@@ -129,7 +129,7 @@ public class MissionManager : MonoBehaviour
         List<csvReader.Trajectory> trajectories = model.object_List;
         foreach (csvReader.Trajectory trajectory in trajectories)
         {
-            if (trajectory.modelId == "shuttle")
+            if (trajectory.modelId == "craft")
             {
                 shuttleTrajectories = trajectory.waypoints;
             } else if (trajectory.modelId == "moon")
@@ -143,7 +143,7 @@ public class MissionManager : MonoBehaviour
         LineRenderer lineRendererShuttle = this.gameObject.GetComponent<LineRenderer>();
         foreach (csvReader.Waypoint trajectory in shuttleTrajectories)
         {
-            Vector3 coords = fromWayPoint(trajectory);
+            Vector3 coords = fromWayPoint(trajectory, model.galacticScale, 0);
             lineRendererShuttle.SetPosition(index, coords);
 
             index += 1;
