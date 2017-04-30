@@ -214,15 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6561e9c9205a684ca4abfcc70105b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotateAroundYSpeed: 2
-  RotateAroundXSpeed: 2
-  RotateAroundZSpeed: 2
-  MoveHorizontalSpeed: 0.01
-  MoveVerticalSpeed: 0.01
-  ScaleSpeed: 1
-  AxisInputText: {fileID: 0}
-  ButtonInputText: {fileID: 0}
-  JoyStickNamesText: {fileID: 0}
 --- !u!1 &644231201
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,13 +481,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1256510940}
-  m_LocalRotation: {x: 0.28381068, y: -0.8892358, z: 0.18372242, w: -0.30815136}
+  m_LocalRotation: {x: 0.08129613, y: 0.92921144, z: 0.031419393, w: 0.35912377}
   m_LocalPosition: {x: -2.85, y: 0.95, z: 3.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 8.733001, y: 138.70201, z: -398.699}
+  m_LocalEulerAnglesHint: {x: 0, y: 137.73901, z: 10}
 --- !u!1 &1378111127
 GameObject:
   m_ObjectHideFlags: 0
