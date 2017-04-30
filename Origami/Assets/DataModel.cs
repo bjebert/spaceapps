@@ -13,4 +13,6 @@ public class DataModel : MonoBehaviour
     public double playbackSpeed = 10;
 
     public float  galacticScale = (float)100000000.0;
+
+    public float planetScale = 1;
 }

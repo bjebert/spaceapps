@@ -37,14 +37,10 @@ public class MovementManager : MonoBehaviour
         ///////////////////////////////////////////////////////////
 
 
-        setStateApp();
         GameObject codeMan = GameObject.Find("CodeManager");
         DataModel myModel = codeMan.GetComponent<DataModel>();
-        myModel.playbackSpeed += (20 * controllerInput.GetAxisRightThumbstickX());
 
-
-
-
+        setStateApp(myModel);
 }
 
     public float RotateAroundYSpeed = 2.0f;
@@ -73,18 +69,37 @@ public class MovementManager : MonoBehaviour
 
     }
 
-    private void setStateApp()
+    private void setStateApp(DataModel model)
     {
         setLastButtonDown();
         setLastButtonUp();
 
+        model.playbackSpeed = (20 * controllerInput.GetAxisRightThumbstickX());
+
+
         if (lastButtonDown == "X")
         {
-            Time.timeScale = 0;
+            model.planetScale += (float)0.1;
         }
         else if (lastButtonDown == "B")
         {
-            Time.timeScale = 1;
+            model.planetScale -= (float)0.1;
+        }
+        else if (lastButtonDown == "A")
+        {
+            model.galacticScale += 10;
+        }
+        else if (lastButtonDown == "Y")
+        {
+            model.galacticScale -= 10;
+        }
+        else if (lastButtonDown == "LB")
+        {
+            model.playbackSpeed = 0;
+        }
+        else if (lastButtonDown == "RB")
+        {
+            model.playbackSpeed = 1;
         }
 
     }

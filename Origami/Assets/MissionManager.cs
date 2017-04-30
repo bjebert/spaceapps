@@ -106,7 +106,7 @@ public class MissionManager : MonoBehaviour
                         }
                     }
                     sprite.transform.position = target;
-                    updateGameObjectSize(sprite, (float)body.size, myModel.galacticScale);
+                    updateGameObjectSize(sprite, (float)body.size, myModel.galacticScale, myModel.planetScale);
                 }
             }
         }
@@ -139,7 +139,7 @@ public class MissionManager : MonoBehaviour
         fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_probe.txt");
         fileLocations.Add(Application.dataPath + "/StreamingAssets/lunar_orbit.txt");
         fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_orbit.txt");
-        fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_probe.txt");
+//        fileLocations.Add(Application.dataPath + "/StreamingAssets/earth_probe.txt");
 
         foreach (String fileLocation in fileLocations)
         {
@@ -178,13 +178,13 @@ public class MissionManager : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
-    private static void updateGameObjectSize(GameObject sprite, float size, float galacticScale)
+    private static void updateGameObjectSize(GameObject sprite, float size, float galacticScale, float planetScale)
     {
         Renderer[] spriteRender = sprite.GetComponentsInChildren<Renderer>();
         if (spriteRender.Length > 0)
         {
             Vector3 initScale = sprite.transform.localScale;
-            Vector3 spriteSize = spriteRender[0].bounds.size * (float)0.5;
+            Vector3 spriteSize = spriteRender[0].bounds.size * planetScale;
 
             float sizeMag = size / galacticScale;
             float spriteMag = spriteSize.magnitude;
