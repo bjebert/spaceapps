@@ -160,7 +160,7 @@ public class MissionManager : MonoBehaviour
             lineRenderer.name = body.uid + "_line";
             lineRenderer.positionCount = body.waypoints.Count;
             lineRenderer.widthMultiplier = 0.01f;
-            //        lineRenderer.material = new Material(Shader.Find("Default"));
+            lineRenderer.material = new Material(Shader.Find("Diffuse"));
             lineRenderer.startColor = Color.white;
             lineRenderer.endColor = Color.white;
 
