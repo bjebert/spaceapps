@@ -160,8 +160,9 @@ public class MissionManager : MonoBehaviour
             lineRenderer.positionCount = body.waypoints.Count;
             lineRenderer.widthMultiplier = 0.01f;
             lineRenderer.material = new Material(Shader.Find("Diffuse"));
-            lineRenderer.startColor = Color.white;
-            lineRenderer.endColor = Color.white;
+            lineRenderer.material.color = body.colour;
+            lineRenderer.startColor = body.colour;
+            lineRenderer.endColor = body.colour;
 
             model.trajectoryGameObjects.Add(body.uid, sprite);
             model.trajectoryLineRenders.Add(body.uid, lineRenderer);
