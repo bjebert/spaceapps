@@ -153,7 +153,11 @@ public class MissionManager : MonoBehaviour
                 spriteRender.enabled = true;
             }
 
-            LineRenderer lineRenderer = sprite.AddComponent<LineRenderer>();
+            GameObject spriteTraj = new GameObject();
+            spriteTraj.name = body.uid + "_lr";
+
+            LineRenderer lineRenderer = spriteTraj.AddComponent<LineRenderer>();
+            lineRenderer.name = body.uid + "_line";
             lineRenderer.positionCount = body.waypoints.Count;
             lineRenderer.widthMultiplier = 0.01f;
             //        lineRenderer.material = new Material(Shader.Find("Default"));
