@@ -28,15 +28,17 @@ public class csvReader
         public String modelId;
         public double size = 1;
         public double rotationSpeed;
+        public Color colour;
 
         public List<Waypoint> waypoints;
 
-        public Trajectory(String id, String mid, double s, List<Waypoint> wp)
+        public Trajectory(String id, String mid, double s, List<Waypoint> wp, Color c)
         {
             uid = id;
             modelId = mid;
             size = s;
             waypoints = wp;
+            colour = c;
         }
     }
 
@@ -55,8 +57,9 @@ public class csvReader
             String uId = tradData[0].Replace("\"","").Trim();
             String modelId = tradData[1].Replace("\"", "").Trim();
             double size = Double.Parse(tradData[2]);
+            Color colour = getColour(tradData[3].Trim());
 
-            body = new Trajectory(uId, modelId, size, waypoints);
+            body = new Trajectory(uId, modelId, size, waypoints, colour);
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -87,6 +90,40 @@ public class csvReader
             }
         }
         return body;
+    }
+
+    public static Color getColour(string inputColour)
+    {
+        if (inputColour == "white") {
+            return Color.white;
+        }
+        else if (inputColour == "black")
+        {
+            return Color.black;
+        }
+        else if (inputColour == "grey")
+        {
+            return Color.grey;
+        }
+        else if (inputColour == "red")
+        {
+            return Color.red;
+        }
+        else if (inputColour == "blue")
+        {
+            return Color.blue;
+        }
+        else if (inputColour == "green")
+        {
+            return Color.green;
+        }
+        else if (inputColour == "yellow")
+        {
+            return Color.yellow;
+        } else
+        {
+            return Color.white; // Default
+        }
     }
 
 
