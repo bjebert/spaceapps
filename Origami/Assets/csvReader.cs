@@ -57,7 +57,7 @@ public class csvReader
             String uId = tradData[0].Replace("\"","").Trim();
             String modelId = tradData[1].Replace("\"", "").Trim();
             double size = Double.Parse(tradData[2]);
-            Color colour = getColour(tradData[3].Trim());
+            Color colour = getColour(tradData[3].Trim().ToLower());
 
             body = new Trajectory(uId, modelId, size, waypoints, colour);
 
