@@ -45,15 +45,6 @@ public class MovementManager : MonoBehaviour
 
     private void setStateApp(DataModel model)
     {
-        if (controllerInput.GetButtonDown(ControllerButton.LeftThumbstick))
-        {
-            model.lockCamera = false;
-        }
-        if (controllerInput.GetButtonUp(ControllerButton.LeftThumbstick))
-        {
-            model.lockCamera = true;
-        }
-
         if(!model.lockCamera)
         {
             model.playbackSpeed += (5 * controllerInput.GetAxisRightThumbstickX());
@@ -95,5 +86,9 @@ public class MovementManager : MonoBehaviour
             model.playbackSpeed = 1;
         }
 
+        if (controllerInput.GetButtonDown(ControllerButton.LeftThumbstick))
+        {
+            model.lockCamera = !model.lockCamera;
+        }
     }
 }
